@@ -14,35 +14,61 @@ FLUSSO
 */
 
 #include <stdio.h>
+#include <math.h>
 
 
-float arit_mean(float *array);
+float arit_mean(float array[], size_t size); // media aritmetica
+float geom_mean(float array[], size_t size); // media geometrica
+float quad_mean(float array[], size_t size); // media quadratica
+float harm_mean(float array[], size_t size); // media armonica
 
 
 int main(void)
 {
-   size_t len; 
-   puts("Inserisci il numero di elementi: ");
-   scanf("%zu", &len); // inserisco la dimensione dell'array
-   float elements[len]; 
-   puts("Inserisci i valori di cui vuoi calcolare la media: ");
-   for(size_t i=0; i<len; i++)
-   {
-      scanf("%f", &elements[i]);
+   puts("Inserisci il numero delle modalita'");
+   int mod; 
+   scanf("%d", &mod);
+   
+   puts("Inserisci i dati:");
+   float dataArr[mod];
+   for(size_t i=0; i<mod; i++)
+   { 
+      scanf("%f", &dataArr[i]);
    }
 
-   printf("La media e': %.2f\n", arit_mean(elements));
+   puts("Scegli la funzione: 1-Media aritmetica, 2-Media geometrica, 3-Media Quadratica, 4-Media armonica\n");
+
+   int ch; scanf("%d", &ch);
+   switch(ch)
+   {
+      case 1:
+         printf("La media aritmetica e': %f\n",arit_mean(dataArr, mod));
+         break;
+      case 2:
+         printf("La media geometrica e': %f\n",geom_mean(dataArr, mod));
+         break;
+      default:
+         break;
+   }
 }
 
 
-float arit_mean(float *array)
+float arit_mean(float array[], size_t size)
 {
-   size_t size = sizeof(array)/sizeof(array[0]);
    float mean=0;
    for(size_t i=0; i<size; i++)
    {
       mean += array[i]; 
    }
-   return mean;
+   return mean/size;
 }
 
+float geom_mean(float array[], size_t size)
+{
+   float arg=1;
+   for(size_t i=0; i<size; i++)
+   {
+      arg *= array[i];
+   }
+   return pow(arg, 1.0/size);
+}
