@@ -1,0 +1,3 @@
+- Scrivere readme.md decente;
+- Inserire commenti per favorire leggibilità codice;
+- Creare main.c che includerà tutti i file esterni con le varie funzioni (medie.h, var.h, ecc).
