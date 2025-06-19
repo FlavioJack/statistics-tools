@@ -21,7 +21,7 @@ float arit_mean(float array[], size_t size); // media aritmetica
 float geom_mean(float array[], size_t size); // media geometrica
 float quad_mean(float array[], size_t size); // media quadratica
 float harm_mean(float array[], size_t size); // media armonica
-
+float sum(float array[], size_t size); // sommatoria
 
 int main(void)
 {
@@ -36,20 +36,8 @@ int main(void)
       scanf("%f", &dataArr[i]);
    }
 
-   puts("Scegli la funzione: 1-Media aritmetica, 2-Media geometrica, 3-Media Quadratica, 4-Media armonica\n");
-
-   int ch; scanf("%d", &ch);
-   switch(ch)
-   {
-      case 1:
-         printf("La media aritmetica e': %f\n",arit_mean(dataArr, mod));
-         break;
-      case 2:
-         printf("La media geometrica e': %f\n",geom_mean(dataArr, mod));
-         break;
-      default:
-         break;
-   }
+   printf("Media aritmetica: %.2f\nMedia geometrica: %.2f\n", arit_mean(dataArr, mod), geom_mean(dataArr, mod));
+   printf("Media quadratica: %.2f\nMedia armonica: %.2f\n", quad_mean(dataArr, mod), harm_mean(dataArr, mod));
 }
 
 
@@ -65,10 +53,40 @@ float arit_mean(float array[], size_t size)
 
 float geom_mean(float array[], size_t size)
 {
-   float arg=1;
+   float mean=1;
    for(size_t i=0; i<size; i++)
    {
-      arg *= array[i];
+      mean *= array[i];
    }
-   return pow(arg, 1.0/size);
+   return pow(mean, 1.0/size);
+}
+
+float quad_mean(float array[], size_t size)
+{
+   float square_arr[size];
+   for(size_t i=0; i<size; i++)
+   {
+      square_arr[i] = array[i]*array[i];
+   }
+   return sqrt( sum(square_arr, size)/size );
+}
+
+float harm_mean(float array[], size_t size)
+{
+   float reverse_array[size];
+   for(size_t i=0; i<size; i++)
+   {
+      reverse_array[i] = 1/array[i];
+   }
+   return size / sum(reverse_array, size);
+}
+
+float sum(float array[], size_t size)
+{
+   float result=0;
+   for(size_t i=0; i<size; i++)
+   {
+      result += array[i];
+   }
+   return result;
 }
