@@ -15,9 +15,9 @@ FLUSSO
 
 #include <stdio.h>
 #include <math.h>
+#include <stdbool.h>
 
-
-float arit_mean(float array[], size_t size); // media aritmetica
+float arit_mean(float array[], size_t size, bool pondStatus); // media aritmetica
 float geom_mean(float array[], size_t size); // media geometrica
 float quad_mean(float array[], size_t size); // media quadratica
 float harm_mean(float array[], size_t size); // media armonica
@@ -25,30 +25,72 @@ float sum(float array[], size_t size); // sommatoria
 
 int main(void)
 {
-   puts("Inserisci il numero delle modalita'");
+   puts("Inserisci il numero delle modalita':");
    int mod; 
    scanf("%d", &mod);
-   
-   puts("Inserisci i dati:");
-   float dataArr[mod];
+
+   bool ponderate = false;
+   // input utente
+   bool loopMenu = false;
+   do
+   {
+      char ch;
+      // buffer flush
+      while ((ch = getchar()) != '\n' && ch != EOF);
+      puts("Le modalita' sono ponderate? s->SI, n->NO");
+      switch(ch = getchar())
+      {
+         case 's':
+            ponderate = true;
+            loopMenu = false;
+            break;
+         case 'n':
+            ponderate = false;
+            loopMenu = false;
+            break;
+         default:
+            puts("Hai inserito un carattere errato.");
+            loopMenu = true;
+      }
+   }
+   while(loopMenu);
+
+
+   printf("Inserisci i dati %s:\n", ponderate?"ponderati":"non ponderati");
+   float dataArr[mod];     // array che contiene le modalita'
+   int absFreqArr[mod];    // array che contiene le frequenze assolute delle modalita'
    for(size_t i=0; i<mod; i++)
    { 
+      printf("Valore %zu: ", i+1);
       scanf("%f", &dataArr[i]);
+      if(ponderate)
+      {
+         puts("Si ripete per: ");
+         scanf("%d", &absFreqArr[i]);
+      }
    }
+   // print delle modalita con le rispettive frequenze
+   for(size_t i=0; i<mod; i++)
+   {
+      printf("%f x %d volte\n",dataArr[i], absFreqArr[i]);  
+   }
+   
 
-   printf("Media aritmetica: %.2f\nMedia geometrica: %.2f\n", arit_mean(dataArr, mod), geom_mean(dataArr, mod));
+   printf("Media aritmetica: %.2f\nMedia geometrica: %.2f\n", arit_mean(dataArr, mod, ponderate), geom_mean(dataArr, mod));
    printf("Media quadratica: %.2f\nMedia armonica: %.2f\n", quad_mean(dataArr, mod), harm_mean(dataArr, mod));
 }
 
 
-float arit_mean(float array[], size_t size)
+float arit_mean(float array[], size_t size, bool pondStatus)
 {
+   
    float mean=0;
    for(size_t i=0; i<size; i++)
    {
       mean += array[i]; 
    }
    return mean/size;
+
 }
 
 float geom_mean(float array[], size_t size)
