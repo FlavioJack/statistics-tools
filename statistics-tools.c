@@ -17,35 +17,49 @@ FLUSSO
 #include <math.h>
 #include <stdbool.h>
 
-float arit_mean(float array[], size_t size, bool pondStatus); // media aritmetica
+float arit_mean(float array[], size_t size); // media aritmetica
 float geom_mean(float array[], size_t size); // media geometrica
 float quad_mean(float array[], size_t size); // media quadratica
 float harm_mean(float array[], size_t size); // media armonica
 float sum(float array[], size_t size); // sommatoria
+void input_values(bool * setFreq, int * data_quantity, float data[], int dataFreq[]);
+
 
 int main(void)
 {
+   // manage user input for data values
+   int mod;                // number of values to insert
    puts("Inserisci il numero delle modalita':");
-   int mod; 
    scanf("%d", &mod);
 
    bool ponderate = false;
-   // input utente
+   
+   float dataArr[mod];     // data array, contiene i valori
+   int absFreqArr[mod];    // data freq array, contiene le frequenze assolute dei valori
+   
+   input_values(&ponderate, &mod, dataArr, absFreqArr);
+
+   printf("Media aritmetica: %.2f\nMedia geometrica: %.2f\n", arit_mean(dataArr, mod), geom_mean(dataArr, mod));
+   printf("Media quadratica: %.2f\nMedia armonica: %.2f\n", quad_mean(dataArr, mod), harm_mean(dataArr, mod));
+}
+
+void input_values(bool * setFreq, int * data_quantity, float data[], int dataFreq[])
+{  
    bool loopMenu = false;
    do
    {
-      char ch;
+      char ch; // input for menu choice
       // buffer flush
       while ((ch = getchar()) != '\n' && ch != EOF);
       puts("Le modalita' sono ponderate? s->SI, n->NO");
       switch(ch = getchar())
       {
          case 's':
-            ponderate = true;
+            *setFreq = true;
             loopMenu = false;
             break;
          case 'n':
-            ponderate = false;
+            *setFreq = false;
             loopMenu = false;
             break;
          default:
@@ -55,33 +69,32 @@ int main(void)
    }
    while(loopMenu);
 
-
-   printf("Inserisci i dati %s:\n", ponderate?"ponderati":"non ponderati");
-   float dataArr[mod];     // array che contiene le modalita'
-   int absFreqArr[mod];    // array che contiene le frequenze assolute delle modalita'
-   for(size_t i=0; i<mod; i++)
+   printf("Inserisci i dati %s:\n", *setFreq?"ponderati":"non ponderati");
+  
+   // insert values, eventually with abs freq
+   for(size_t i=0; i<*data_quantity; i++)
    { 
       printf("Valore %zu: ", i+1);
-      scanf("%f", &dataArr[i]);
-      if(ponderate)
+      scanf("%f", &data[i]);
+      if(*setFreq)
       {
          puts("Si ripete per: ");
-         scanf("%d", &absFreqArr[i]);
+         scanf("%d", &dataFreq[i]);
       }
    }
-   // print delle modalita con le rispettive frequenze
-   for(size_t i=0; i<mod; i++)
+   // print data values with abs freq
+   puts("Valori inseriti: ");
+   for(size_t i=0; i<*data_quantity; i++)
    {
-      printf("%f x %d volte\n",dataArr[i], absFreqArr[i]);  
+      if(*setFreq)
+         printf("%zu) %.2f x %d volte\n", i+1, data[i], dataFreq[i]);  
+      else
+         printf("%zu) %.2f\n", i+1, data[i]);
    }
-   
-
-   printf("Media aritmetica: %.2f\nMedia geometrica: %.2f\n", arit_mean(dataArr, mod, ponderate), geom_mean(dataArr, mod));
-   printf("Media quadratica: %.2f\nMedia armonica: %.2f\n", quad_mean(dataArr, mod), harm_mean(dataArr, mod));
 }
 
 
-float arit_mean(float array[], size_t size, bool pondStatus)
+float arit_mean(float array[], size_t size)
 {
    
    float mean=0;
